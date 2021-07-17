@@ -1,0 +1,310 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,600&display=swap')
+
+
+$colorBlueRoofLight: #6fc5ff
+$colorBlueRoofDark: #0058ff
+
+$colorGreyLight: #fafaf5
+$colorGreyNormal: #e3e2cf
+$colorGreyDark: #bebdaf
+$colorBackground: #2C2F36
+
+$colorShadowBlue: #7cb1ff
+$colorShadowBlueLight: #8dc9fc
+
+$colorWindowGrey: #534d4d
+
+$roofGradient: linear-gradient(150deg,$colorBlueRoofLight,$colorBlueRoofDark)
+$sceneGradient: linear-gradient(#1D2B49,#1A45A0,#91cdff,#fff)
+
+@mixin size($w,$h:$w,$bdrs:0)
+  width: $w
+  height: $h
+  border-radius: $bdrs
+  
+@mixin flex($j:center,$a:center)
+  display: flex
+  justify-content: $j
+  align-items: $a
+  
+@mixin abpos($l:initial,$t:initial)
+  position: absolute
+  left: $l
+  top: $t
+  
+//*:before和*:after才能選到虛擬元素
+*,*:before,*:after
+  font-family: 'Playfair Display','微軟正黑體'
+  // border: solid 1px black 
+  position: relative
+
+
+// .block
+//   +size(200px,200px,50px)
+//   background: $sceneGradient
+//   background-size: 100% 200%
+//   background-position: 0 0%
+//   +abpos(50px,100px)
+  
+  
+// input:checked+h1
+//   color: red
+
+html,body
+  +size(100%)
+  margin: 0
+  +flex
+  background-color: $colorBackground
+  color: white
+ 
+.scene
+  +size(700px,500px,15px)
+  background: $sceneGradient
+  background-size: 100% 200%
+  box-shadow: 0px 0px 30px rgba(black,0.3)
+  overflow: hidden
+  
+  
+.lefttopText
+  margin:
+    top: 30px
+    left: 30px
+  h1
+    font-size: 36px
+    letter-spacing: 3px
+    margin: 0
+    font-weight: 300
+  h5
+    font-size: 14px
+    letter-spacing: 1px
+    opacity: 0.6
+    margin-bottom: 0px
+    font-weight: 300
+  p
+    font-size: 14px
+    letter-spacing: 2px
+    line-height: 24px
+    opacity: 0.6
+    
+  .blueblock
+    +size(20px,25px)
+    background-color: $colorShadowBlue
+    
+.building
+  position: absolute
+  bottom: 0
+  right: 0
+  transform: scale(0.95)
+//原本建築超出卡片了，利用scale調整建築比例去符合卡片尺寸
+
+//針對開頭為house的屬性做設定，^符號為開頭的意思
+[class^="house"]
+  position: absolute
+  bottom: 0
+  right: 0
+  
+.house1
+  +size(180px,200px)
+  background-color: $colorGreyLight
+  box-shadow: inset -50px 0px 0px $colorGreyNormal
+  z-index: 1
+  
+  .window
+    +size(40px,100px,20px)
+    background-color: $colorGreyNormal
+    box-shadow: inset 8px 0px rgba(black,0.2)
+    margin-top: 40px
+    margin-left: 70px
+    +flex
+    flex-direction: column
+    
+    .circle
+      +size(20px,20px,50%)
+      margin: 4px
+      margin-left: 10px
+      background-color: $colorWindowGrey
+      
+.house2
+  +size(240px,170px)
+  right: 130px
+  background-color: $colorGreyLight
+  box-shadow: inset 0px 15px $colorShadowBlueLight,inset -72px 0px $colorGreyNormal
+  z-index: 2
+  
+  .door
+    +size(40px,80px,20px 20px 0 0)
+    position: absolute
+    bottom: 0
+    left: 45px
+    background-color: $colorBackground
+    box-shadow: inset 10px 2px $colorShadowBlueLight
+    
+    
+.house3
+  +size(320px,300px)
+  +flex
+  background-color: $colorGreyLight
+  z-index: 0
+  
+  .wall
+    flex: 1
+    height: 100%
+    +flex(center,flex-start)
+    //flex-start 對齊軸線前端/上端
+    
+    .window
+      +size(24px,50px,20px 20px 0 0)
+      margin-top: 30px
+      background-color: $colorBackground
+      
+      
+
+    &:before
+      content: ""
+      display: block
+      +size(110%,20px)
+      position: absolute
+      top: -20px
+      left: 50%
+      transform: translate(-50%)
+      background-color: inherit
+      box-shadow: 0px 1px 5px rgba(0,0,0,0.1)
+    
+    
+    =wall($color,$flex,$windowpen:0,$z:1)
+      background-color: $color
+      flex: $flex
+      .window
+        box-shadow: inset $windowpen 2px  $colorShadowBlueLight
+      //把=wall下面的window的偏移值設為引數$windowpen，以便設定不同window的偏移值，記得樣設定預設值為0
+      &:before
+        z-index: $z
+      
+    &:nth-child(1)
+     +wall($colorGreyLight,10,6px,2)
+    
+    
+    &:nth-child(2)
+     +wall($colorGreyNormal,20,0,3)
+      
+    
+    
+    &:nth-child(3)
+     +wall($colorGreyDark,10,-6px,2)
+    
+=halfCir($r)
+  +size($r*2,$r,$r $r 0 0)
+  
+.roof
+  +halfCir(150px)
+  position: absolute
+  top: -170px
+  right: 5px
+  background: $roofGradient
+  
+.rooftop
+  +halfCir(14px)
+  position: absolute
+  left: 50%
+  top: -14px
+  transform: translate(-50%)
+  background-color: white
+  
+  .cross
+    +size(4px,30px)
+    position: absolute
+    left: 50%
+    transform: translate(-50%)
+    bottom: 10px
+    background-color: white
+
+    &:before
+      content: ""
+      display: block
+      +size(20px,4px)
+      position: absolute
+      bottom: 15px
+      left: 50%
+      transform: translate(-50%)
+      background-color: inherit
+    
+.allstars
+  +size(100%)
+  +abpos(0,0)
+
+  @keyframes falling
+    0%,100%
+      opacity: 0
+    70%
+      opacity: 1
+    0%
+      transform: translate(100px,0px)
+    100%
+      transform: translate(0px,200px)
+  
+  [class^='star']
+    +size(3px,3px,50%)
+    background-color: white
+    animation: falling 2s infinite
+    
+  @for $i from 1 through 30
+    .star#{$i}
+      $posX: random()*100%
+      $posY: random()*-80%+50%
+      +abpos($posX,$posY)
+      animation-delay: $i*-0.1s
+    //讓每個star間隔0.1s但因為位置是隨機的，所以看起來不會有很規則的順序
+    
+.remind
+  opacity: 0.2
+  margin-bottom: 10px
+  letter-spacing: 1px
+
+.dayText
+  display: none
+  
+.sun,.moon
+  +size(50px,50px,50%)
+  +abpos(250px,100px)
+
+.sun
+  background-color: #ffc228
+  box-shadow: 0px 0px 20px rgba(#ffc228,0.5)
+  top: 400px
+  opacity: 0
+
+.moon
+  animation: moonAppear 2s both
+  //both 讓動畫維持在結束時的狀態
+
+@keyframes moonAppear
+  0%
+    box-shadow: inset 0px 0px 0px rgba(white,0.9)
+  100%
+    box-shadow: inset 10px -10px 0px rgba(white,0.9)
+
+h1,h5,p,.blueblock,buliding,.scene,.sun,.moon
+  transition: 2s
+
+input:checked+.scene
+  background-position: 0 100%
+  .nightText
+    display: none
+  .dayText
+    display: block
+  h1,h5,p
+    color: #1D2B49
+  .allstars
+    // display: none
+    opacity: 0
+  .moon
+    top:-200px
+  .sun
+    opacity: 1
+    top: 100px
+  .buliding
+    filter: brightness(105%)
+
+input
+  display: none
+  
